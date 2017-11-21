@@ -120,18 +120,24 @@ class FFRAnalyzer:
         # Array indicates the presentation conditions of each word
         self.all_condis = np.array(all_condis).reshape((len(all_recalled), self.NUM_CONDITIONS))
 
-    def bin_recalls(self):
+    def bin_delays(self):
         # Group delays into time bins and replace the numbers in the delay arrays with their corresponding bin numbers
         # Each bin contains 1% of delay times
         self.bins = np.array([np.percentile(self.all_delays, i) for i in range(1, 100)])
         self.bin_medians = np.array([np.percentile(self.all_delays, i + .5) for i in range(1, 100)])
         self.all_delays = np.searchsorted(self.bins, self.all_delays)
 
-        # For each bin, use all_ffr_recalled_(n)pr to calculate the overall probability of recall in each time bin
-        self.bin_precs = np.empty(len(self.bins))
-        self.bin_precs.fill(np.nan)
-        for i in range(len(self.bins)):
-            self.bin_precs[i] = np.nanmean(self.all_ffr_recalled[self.all_delays == i])
+    def get_precs(self):
+        filters = {'sa12': {'ll': 12, 'pr': 1600, 'mod': 'a'}, 'sa24': {'ll': 24, 'pr': 1600, 'mod': 'a'},
+                   'sv12': {'ll': 12, 'pr': 1600, 'mod': 'v'}, 'sv24': {'ll': 24, 'pr': 1600, 'mod': 'v'},
+                   'fa12': {'ll': 12, 'pr': 800, 'mod': 'a'}, 'fa24': {'ll': 24, 'pr': 800, 'mod': 'a'},
+                   'fv12': {'ll': 12, 'pr': 800, 'mod': 'v'}, 'fv24': {'ll': 24, 'pr': 800, 'mod': 'v'}}
+        for filt in filters:
+            filtered_rec, filtered_del = self.filter_by_cond(**filters[filt])
+            self.bin_precs[filt] = np.empty(len(self.bins))
+            self.bin_precs[filt].fill(np.nan)
+            for i in range(len(self.bins)):
+                self.bin_precs[filt][i] = np.nanmean(filtered_rec[filtered_del == i])
 
     def plot(self):
         # Plot probability of FFR recall for each time bin for previously recalled versus previously non-recalled words
@@ -140,10 +146,20 @@ class FFRAnalyzer:
         plt.xlabel('Delay (Minutes)')
         plt.ylabel('Probability of Final Recall')
 
+    def filter_by_cond(self, recalled=None, ll=None, pr=None, mod=None, dd=None):
+        ind = [i for i in range(len(self.all_condis)) if
+               (recalled is None or self.all_recalled[i] == recalled) and
+               (ll is None or int(self.all_condis[i][0]) == ll) and
+               (pr is None or self.all_condis[i][1] == pr) and
+               (mod is None or self.all_condis[i][2] == mod) and
+               (dd is None or int(self.all_condis[i][3]) == dd)]
+        return self.all_ffr_recalled[ind], self.all_delays[ind]
+
 
 if __name__ == "__main__":
     ana = FFRAnalyzer()
     ana.process_data()
-    ana.bin_recalls()
+    ana.bin_delays()
+    ana.get_precs()
     ana.plot()
     plt.show()

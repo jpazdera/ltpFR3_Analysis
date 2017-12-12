@@ -223,4 +223,3 @@ if __name__ == "__main__":
     ana.bin_delays(4)
     ana.get_precs()
     ana.plot()
-    pass

@@ -3,6 +3,7 @@ import json
 import numpy as np
 import matplotlib.pyplot as plt
 from glob import glob
+from FFR import FFRAnalyzer
 
 
 def fig2_spc(m, s):
@@ -185,7 +186,13 @@ def fig6_irt(m, s):
 
 
 def fig7_ffr():
-    pass
+    ffr = FFRAnalyzer()
+    if not ffr.load_data():
+        ffr.load_event_data()
+        ffr.process_data()
+    ffr.bin_delays(4)
+    ffr.get_precs()
+    ffr.plot()
 
 
 if __name__ == "__main__":

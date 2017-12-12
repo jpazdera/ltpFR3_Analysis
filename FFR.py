@@ -214,6 +214,8 @@ class FFRAnalyzer:
         plt.ylabel('Probability of Final Recall')
         plt.legend()
 
+        plt.show()
+
 
 if __name__ == "__main__":
     ana = FFRAnalyzer()

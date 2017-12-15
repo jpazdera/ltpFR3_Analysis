@@ -78,7 +78,7 @@ def fig3_pfr(m, s):
     ax.set_xlabel('Serial Position')
     ax.set_ylabel('Probability of First Recall')
     ax.legend(labels=['Visual', 'Auditory'])
-    ax.set_ylim(0, 1)
+    ax.set_ylim(0, .5)
     ax.set_xticks([0, 4, 8, 12, 16, 20, 24])
     ax.spines['right'].set_visible(False)
     ax.spines['top'].set_visible(False)
@@ -99,7 +99,7 @@ def fig3_pfr(m, s):
     ax.set_xlabel('Serial Position')
     ax.set_ylabel('Probability of First Recall')
     ax.legend(labels=['Visual', 'Auditory'])
-    ax.set_ylim(0, 1)
+    ax.set_ylim(0, .5)
     ax.set_xticks([0, 4, 8, 12, 16, 20, 24])
     ax.spines['right'].set_visible(False)
     ax.spines['top'].set_visible(False)
@@ -195,6 +195,8 @@ def fig6_irt(m, s):
                 s[filt][i][j] = np.nan if item is None else item
 
     ax = plt.subplot(221)
+    ax.plot([], [], VIS_FMT)
+    ax.plot([], [], AUD_FMT)
     ax.plot(range(1, 14), np.array(m['fv12']).T, VIS_FMT)
     ax.plot(range(1, 14), np.array(m['fa12']).T, AUD_FMT)
     ax.legend(labels=['Visual', 'Auditory'])
@@ -211,6 +213,8 @@ def fig6_irt(m, s):
     """
 
     ax = plt.subplot(222)
+    ax.plot([], [], VIS_FMT)
+    ax.plot([], [], AUD_FMT)
     ax.plot(range(1, 14), np.array(m['sv12']).T, VIS_FMT)
     ax.plot(range(1, 14), np.array(m['sa12']).T, AUD_FMT)
     ax.legend(labels=['Visual', 'Auditory'])
@@ -227,6 +231,8 @@ def fig6_irt(m, s):
     """
 
     ax = plt.subplot(223)
+    ax.plot([], [], VIS_FMT)
+    ax.plot([], [], AUD_FMT)
     ax.plot(range(1, 26), np.array(m['fv24']).T, VIS_FMT)
     ax.plot(range(1, 26), np.array(m['fa24']).T, AUD_FMT)
     ax.legend(labels=['Visual', 'Auditory'])
@@ -242,6 +248,8 @@ def fig6_irt(m, s):
     """
 
     ax = plt.subplot(224)
+    ax.plot([], [], VIS_FMT)
+    ax.plot([], [], AUD_FMT)
     ax.plot(range(1, 26), np.array(m['sv24']).T, VIS_FMT)
     ax.plot(range(1, 26), np.array(m['sa24']).T, AUD_FMT)
     ax.legend(labels=['Visual', 'Auditory'])
@@ -277,8 +285,8 @@ if __name__ == "__main__":
     sems = s['sem']
 
     fig2_spc(means, sems)
-    #fig3_pfr(means, sems)
-    #fig4_crp(means, sems)
+    fig3_pfr(means, sems)
+    fig4_crp(means, sems)
     #fig5_pli(means, sems)
-    #fig6_irt(means, sems)
+    fig6_irt(means, sems)
     #fig7_ffr()

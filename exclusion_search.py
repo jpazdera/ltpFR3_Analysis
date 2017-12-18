@@ -1,7 +1,6 @@
 import os
 import json
 import numpy as np
-from scipy.stats import zscore
 from glob import glob
 
 
@@ -9,7 +8,7 @@ from glob import glob
 datafiles = glob('/data/eeg/scalp/ltp/ltpFR3_MTurk/data/MTK*.json')
 
 # Initialize data arrays
-subj = np.empty(len(datafiles), dtype='S8')
+subj = np.empty(len(datafiles), dtype='U7')
 math_total = np.empty(len(datafiles), dtype=int)
 math_perc = np.empty(len(datafiles), dtype=float)
 zrecs = np.empty(len(datafiles), dtype=float)
@@ -30,7 +29,7 @@ for i, df in enumerate(datafiles):
 low_math = subj[np.where(math_total < 48)]
 
 # Exlcude participants with low math accuracy (in case they have a high math score from entering lots of random numbers)
-low_acc = subj[np.where(zscore(math_perc) < -3)]
+low_acc = subj[np.where(((math_perc - np.nanmean(math_perc)) / np.nanstd(math_perc)) < -3)]
 
 # Exclude participants who made 0 recalls on more than 1 trial
 zrec_trial = subj[np.where(zrecs > 1)]

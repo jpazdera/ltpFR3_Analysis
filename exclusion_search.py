@@ -4,9 +4,13 @@ import numpy as np
 from glob import glob
 
 
-# Find behavioral matrix files from all participants
-datafiles = glob('/data/eeg/scalp/ltp/ltpFR3_MTurk/data/MTK*.json')
+V = 1
 
+# Find behavioral matrix files from all participants
+datafiles = glob('/data/eeg/scalp/ltp/ltpFR3_MTurk/data/MTK*.json') + \
+            glob('/data/eeg/scalp/ltp/ltpFR3_MTurk/data/excluded/MTK*.json')
+
+datafiles = [df for df in datafiles if  (int(df[-9:-5]) < 1309 and V == 1) or (int(df[-9:-5]) >=1309 and V==2)]
 # Initialize data arrays
 subj = np.empty(len(datafiles), dtype='U7')
 math_total = np.empty(len(datafiles), dtype=int)
@@ -16,6 +20,7 @@ recs = np.empty(len(datafiles), dtype=float)
 
 # Get math and recall info from each participant
 for i, df in enumerate(datafiles):
+    snum = int(df[-9:-5])
     with open(df, 'r') as f:
         d = json.load(f)
 

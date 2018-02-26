@@ -4,7 +4,7 @@ import numpy as np
 from glob import glob
 
 
-V = 1
+V = 2
 
 # Find behavioral matrix files from all participants
 datafiles = glob('/data/eeg/scalp/ltp/ltpFR3_MTurk/data/MTK*.json') + \
@@ -45,5 +45,9 @@ high_rec = subj[np.where(recs > 272)]
 # Get combined list of excluded participants
 exclude = np.union1d(np.union1d(np.union1d(low_math, low_acc), zrec_trial), high_rec)
 
-print 'Participants Marked for Exclusion: ', exclude
+print sorted(low_math)
+print sorted(low_acc)
+print sorted(zrec_trial)
+print sorted(high_rec)
+#print 'Participants Marked for Exclusion: ', exclude
 print 'Total Excluded: ', exclude.shape[0]

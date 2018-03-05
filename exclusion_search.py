@@ -4,7 +4,7 @@ import numpy as np
 from glob import glob
 
 
-V = 2
+V = 1
 
 # Find behavioral matrix files from all participants
 datafiles = glob('/data/eeg/scalp/ltp/ltpFR3_MTurk/data/MTK*.json') + \
@@ -34,7 +34,7 @@ for i, df in enumerate(datafiles):
 low_math = subj[np.where(math_total < 48)]
 
 # Exlcude participants with low math accuracy (in case they have a high math score from entering lots of random numbers)
-low_acc = subj[np.where(((math_perc - np.nanmean(math_perc)) / np.nanstd(math_perc)) < -3)]
+low_acc = subj[np.where(((math_perc - np.nanmean(math_perc)) / np.nanstd(math_perc)) < -2)]
 
 # Exclude participants who made 0 recalls on more than 1 trial
 zrec_trial = subj[np.where(zrecs > 1)]
@@ -51,3 +51,6 @@ print sorted(zrec_trial)
 print sorted(high_rec)
 #print 'Participants Marked for Exclusion: ', exclude
 print 'Total Excluded: ', exclude.shape[0]
+
+for s in np.unique(low_math.tolist() + low_acc.tolist() + zrec_trial.tolist() + high_rec.tolist()):
+    print str(s)

@@ -4,13 +4,13 @@ import numpy as np
 from glob import glob
 
 
-V = 1
+V = 2
 
 # Find behavioral matrix files from all participants
 datafiles = glob('/data/eeg/scalp/ltp/ltpFR3_MTurk/data/MTK*.json') + \
             glob('/data/eeg/scalp/ltp/ltpFR3_MTurk/data/excluded/MTK*.json')
 
-datafiles = [df for df in datafiles if  (int(df[-9:-5]) < 1309 and V == 1) or (int(df[-9:-5]) >=1309 and V==2)]
+datafiles = [df for df in datafiles if (int(df[-9:-5]) < 1309 and V == 1) or (int(df[-9:-5]) >= 1309 and V == 2)]
 # Initialize data arrays
 subj = np.empty(len(datafiles), dtype='U7')
 math_total = np.empty(len(datafiles), dtype=int)
@@ -45,6 +45,14 @@ high_rec = subj[np.where(recs > 272)]
 # Get combined list of excluded participants
 exclude = np.union1d(np.union1d(np.union1d(low_math, low_acc), zrec_trial), high_rec)
 
+# Unique exclusion
+wrote_notes = [x for x in np.loadtxt('/data/eeg/scalp/ltp/ltpFR3_MTurk/WROTE_NOTES.txt', dtype=str) if x in subj]
+un_zt = len([x for x in zrec_trial if x not in np.union1d(np.union1d(np.union1d(wrote_notes, low_math), low_acc), high_rec)])
+un_hr = len([x for x in high_rec if x not in np.union1d(np.union1d(np.union1d(wrote_notes, low_math), low_acc), zrec_trial)])
+un_lm = len([x for x in low_math if x not in np.union1d(np.union1d(np.union1d(wrote_notes, high_rec), low_acc), zrec_trial)])
+un_la = len([x for x in low_acc if x not in np.union1d(np.union1d(np.union1d(wrote_notes, high_rec), low_math), zrec_trial)])
+un_wn = len([x for x in wrote_notes if x not in np.union1d(np.union1d(np.union1d(low_acc, high_rec), low_math), zrec_trial)])
+
 print sorted(low_math)
 print sorted(low_acc)
 print sorted(zrec_trial)
@@ -54,3 +62,5 @@ print 'Total Excluded: ', exclude.shape[0]
 
 for s in np.unique(low_math.tolist() + low_acc.tolist() + zrec_trial.tolist() + high_rec.tolist()):
     print str(s)
+
+

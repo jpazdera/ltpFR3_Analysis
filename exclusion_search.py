@@ -53,14 +53,14 @@ un_lm = len([x for x in low_math if x not in np.union1d(np.union1d(np.union1d(wr
 un_la = len([x for x in low_acc if x not in np.union1d(np.union1d(np.union1d(wrote_notes, high_rec), low_math), zrec_trial)])
 un_wn = len([x for x in wrote_notes if x not in np.union1d(np.union1d(np.union1d(low_acc, high_rec), low_math), zrec_trial)])
 
-print sorted(low_math)
-print sorted(low_acc)
-print sorted(zrec_trial)
-print sorted(high_rec)
-#print 'Participants Marked for Exclusion: ', exclude
-print 'Total Excluded: ', exclude.shape[0]
+print(sorted(low_math))
+print(sorted(low_acc))
+print(sorted(zrec_trial))
+print(sorted(high_rec))
+#print('Participants Marked for Exclusion: ', exclude)
+print('Total Excluded: ', exclude.shape[0])
 
 for s in np.unique(low_math.tolist() + low_acc.tolist() + zrec_trial.tolist() + high_rec.tolist()):
-    print str(s)
+    print(str(s))
 
 
